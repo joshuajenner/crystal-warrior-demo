@@ -1,9 +1,11 @@
 extends CharacterBody3D
 
 @onready var camera_mount = $"Camera Mount"
-@onready var animation_player = $"Visual/Y Bot/AnimationPlayer"
+@onready var animation_player = $Visual/YBot/AnimationPlayer
+@onready var visual = $Visual
 
-const SPEED = 5.0
+
+const SPEED = 2.7
 const JUMP_VELOCITY = 4.5
 
 var sens_horizontal = 0.5
@@ -17,9 +19,16 @@ func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _input(event):
-	if event is InputEventMouseMotion:
-		rotate_y(deg_to_rad(-event.relative.x * sens_horizontal))
-		camera_mount.rotate_x(deg_to_rad(-event.relative.y * sens_vertical))
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		if event is InputEventMouseMotion:
+			rotate_y(deg_to_rad(-event.relative.x * sens_horizontal))
+			visual.rotate_y(deg_to_rad(event.relative.x * sens_horizontal))
+			camera_mount.rotate_x(deg_to_rad(-event.relative.y * sens_vertical))
+	
+	if event.is_action("ui_cancel"):
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if event.is_action("attack"):
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 func _physics_process(delta):
@@ -36,9 +45,18 @@ func _physics_process(delta):
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
+		if animation_player.current_animation != "walk_forward":
+			animation_player.play("walk_forward")
+			animation_player.speed_scale = 1.1
+		
+		visual.look_at(position + direction)
+		
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
 	else:
+		if animation_player.current_animation != "idle":
+			animation_player.play("idle")
+		
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
