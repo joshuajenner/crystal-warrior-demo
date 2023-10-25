@@ -52,8 +52,18 @@ func _input(event):
 	if event.is_action("attack"):
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
+	# Crystal Claws
 	if event.is_action("ability_1"):
 		cast_ability_1()
+	# Block
+	if event.is_action("ability_2"):
+		cast_ability_2()
+	# Pillar
+	if event.is_action("ability_3"):
+		cast_ability_3()
+	# A Thousand Shards
+	if event.is_action("ability_4"):
+		cast_ability_4()
 
 
 func throw_punch():
@@ -92,6 +102,18 @@ func cast_ability_1():
 			claws.visible = true
 			claw_timer.start(claw_time)
 			HUD.cast_ability_effect.emit(1, claw_time)
+
+func cast_ability_2():
+	if can_cast_abilities():
+		pass
+
+func cast_ability_3():
+	if can_cast_abilities():
+		pass
+
+func cast_ability_4():
+	if can_cast_abilities():
+		pass
 
 
 func _physics_process(delta):
