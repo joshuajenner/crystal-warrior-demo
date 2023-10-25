@@ -15,6 +15,14 @@ run/main_scene="res://levels/level_1.tscn"
 config/features=PackedStringArray("4.1", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+HUD="*res://global/HUD.gd"
+
+[display]
+
+window/stretch/mode="canvas_items"
+
 [filesystem]
 
 import/fbx/enabled=false

@@ -6,7 +6,10 @@ extends CharacterBody3D
 
 @onready var punch_timer = $Timers/PunchTimer
 @onready var combo_timer = $Timers/ComboTimer
+@onready var claw_timer = $Timers/ClawTimer
+@onready var claw_cooldown_timer = $Timers/ClawCooldownTimer
 
+@onready var claws = $Visual/YBot/Armature/Skeleton3D/Claws
 
 const SPEED = 2.7
 const JUMP_VELOCITY = 4.5
@@ -14,12 +17,16 @@ const JUMP_VELOCITY = 4.5
 var sens_horizontal = 0.5
 var sens_vertical = 0.5
 
-enum STATE {IDLE, MOVING, JUMPING, ATTACK, ULTIMATE}
+enum STATE {IDLE, MOVING, JUMPING, ATTACK, CASTING, ULTIMATE}
 enum COMBO {NONE, FIRST, SECOND}
 
 @export var action: STATE = STATE.IDLE
 var combo_state: COMBO = COMBO.NONE
 var combo_timeout: float = 0.5
+
+
+var claw_time: float = 7
+var claw_cooldown: float = 5
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -30,6 +37,7 @@ func _ready():
 	action = STATE.IDLE
 	animation_player.play("idle")
 	animation_player.speed_scale = 1.1
+	claws.visible = false
 
 
 func _input(event):
@@ -43,17 +51,20 @@ func _input(event):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if event.is_action("attack"):
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+	if event.is_action("ability_1"):
+		cast_ability_1()
 
 
 func throw_punch():
-	if can_throw_punch():
+	if can_cast_abilities():
 		action = STATE.ATTACK
 		throw_punch_from_combo()
 		combo_timer.stop()
 		punch_timer.start(0.9)
 
 
-func can_throw_punch() -> bool:
+func can_cast_abilities() -> bool:
 	if action == STATE.IDLE:
 		return true
 	if action == STATE.MOVING:
@@ -73,6 +84,14 @@ func throw_punch_from_combo():
 		COMBO.SECOND:
 			animation_player.play("punch_left")
 			combo_state = COMBO.NONE
+
+
+func cast_ability_1():
+	if can_cast_abilities():
+		if claw_timer.is_stopped() and claw_cooldown_timer.is_stopped():
+			claws.visible = true
+			claw_timer.start(claw_time)
+			HUD.cast_ability_effect.emit(1, claw_time)
 
 
 func _physics_process(delta):
@@ -119,3 +138,13 @@ func _on_combo_timer_timeout():
 
 func _on_animation_player_animation_finished(anim_name):
 	action = STATE.IDLE
+
+
+func _on_claw_timer_timeout():
+	claws.visible = false
+	claw_cooldown_timer.start(claw_cooldown)
+	HUD.set_ability_cooldown.emit(1, claw_cooldown)
+
+
+func _on_claw_cooldown_timeout():
+	pass # Replace with function body.
