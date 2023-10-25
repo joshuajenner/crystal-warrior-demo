@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://clrre8hsahp0"]
+
+[ext_resource type="Texture2D" uid="uid://dqgbgrchvfwve" path="res://assets/textures/grids/Green/texture_05.png" id="1_6sude"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dncxl"]
+albedo_texture = ExtResource("1_6sude")
+uv1_triplanar = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_q3vl8"]
+material = SubResource("StandardMaterial3D_dncxl")
+
+[node name="enemy" type="Node3D"]
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+use_collision = true
+mesh = SubResource("CylinderMesh_q3vl8")

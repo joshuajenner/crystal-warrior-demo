@@ -12,11 +12,11 @@ extends CharacterBody3D
 @onready var block_cooldown_timer = $Timers/BlockCooldownTimer
 
 @onready var claws = $Visual/YBot/Armature/Skeleton3D/Claws
-@onready var block_mesh = $Visual/YBot/BlockMesh
+@onready var block_mesh = $Visual/YBot/Block/BlockMesh
 
 
 const SPEED = 2.7
-const JUMP_VELOCITY = 4.5
+const JUMP_VELOCITY = 5.0
 
 var sens_horizontal = 0.5
 var sens_vertical = 0.5
@@ -27,7 +27,6 @@ enum COMBO {NONE, FIRST, SECOND}
 @export var action: STATE = STATE.IDLE
 var combo_state: COMBO = COMBO.NONE
 var combo_timeout: float = 0.5
-
 
 var claw_time: float = 7
 var claw_cooldown: float = 5
@@ -75,7 +74,7 @@ func _input(event):
 
 
 func throw_punch():
-	if can_cast_abilities():
+	if can_cast_abilities() and is_on_floor():
 		action = STATE.ATTACK
 		throw_punch_from_combo()
 		combo_timer.stop()
@@ -119,9 +118,8 @@ func cast_ability_2():
 		animation_player.play("block")
 		HUD.cast_ability_effect.emit(2, block_time)
 	elif action == STATE.BLOCKING:
-		action = STATE.IDLE
-		block_mesh.visible = false
-		block_cooldown_timer.start(block_cooldown)
+		block_timer.stop()
+		_on_block_timer_timeout()
 
 func cast_ability_3():
 	if can_cast_abilities():
@@ -139,6 +137,8 @@ func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
+		if not action == STATE.BLOCKING:
+			animation_player.play("jump_idle")
 	
 	# Handle Jump.
 	if Input.is_action_just_pressed("jump") and is_on_floor():
@@ -150,7 +150,8 @@ func _physics_process(delta):
 	if action == STATE.MOVING or action == STATE.IDLE:
 		if direction:
 			action = STATE.MOVING
-			animation_player.play("walk_forward")
+			if is_on_floor():
+				animation_player.play("walk_forward")
 			
 			visual.look_at(position + direction)
 			
@@ -158,7 +159,8 @@ func _physics_process(delta):
 			velocity.z = direction.z * SPEED
 		else:
 			action = STATE.IDLE
-			animation_player.play("idle")
+			if is_on_floor():
+				animation_player.play("idle")
 			
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 			velocity.z = move_toward(velocity.z, 0, SPEED)
@@ -191,6 +193,7 @@ func _on_claw_timer_timeout():
 
 
 func _on_block_timer_timeout():
+	action = STATE.IDLE
 	block_mesh.visible = false
 	block_cooldown_timer.start(block_cooldown)
 	HUD.set_ability_cooldown.emit(2, block_cooldown)
