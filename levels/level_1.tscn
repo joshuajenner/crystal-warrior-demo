@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://biu4gxwp1r72i"]
+[gd_scene load_steps=18 format=3 uid="uid://biu4gxwp1r72i"]
 
 [ext_resource type="Texture2D" uid="uid://c8arnlq67qi7" path="res://assets/textures/grids/Dark/texture_05.png" id="1_mdac7"]
 [ext_resource type="Texture2D" uid="uid://b58xv1joypxo5" path="res://assets/textures/grids/Orange/texture_09.png" id="2_ac5s1"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://d2hyqedpwk2ik" path="res://assets/textures/circle.png" id="4_0kjrp"]
 [ext_resource type="PackedScene" uid="uid://dt757nbq1dtnh" path="res://ui/hud.tscn" id="4_xtydk"]
 [ext_resource type="Texture2D" uid="uid://48gqfc767ri6" path="res://assets/textures/cross.png" id="5_iq3t4"]
+[ext_resource type="PackedScene" uid="uid://bwkysw57o6rke" path="res://danger/cannon.tscn" id="7_bmsum"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cu2p1"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -94,6 +95,9 @@ use_collision = true
 
 [node name="enemy" parent="Danger" instance=ExtResource("3_a7kt4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.1071, 0.5, 5.1366)
+
+[node name="Cannon" parent="Danger" instance=ExtResource("7_bmsum")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0.5, -6)
 
 [node name="CharacterBody3D" parent="." instance=ExtResource("3_pbhx8")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.21771, 0.5, -2.3325)

@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://eyvc7i3u3xui"]
+
+[ext_resource type="Texture2D" uid="uid://does8rpwjdh1r" path="res://assets/textures/grids/Red/texture_05.png" id="1_eq5oq"]
+[ext_resource type="Script" path="res://danger/fireball.gd" id="1_xmofl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2bxcg"]
+albedo_texture = ExtResource("1_eq5oq")
+uv1_triplanar = true
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_vogxd"]
+
+[node name="Fireball" type="Node3D"]
+script = ExtResource("1_xmofl")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="."]
+material_override = SubResource("StandardMaterial3D_2bxcg")
+radial_segments = 16
+rings = 8
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_vogxd")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

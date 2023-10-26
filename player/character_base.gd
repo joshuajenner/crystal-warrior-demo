@@ -10,9 +10,12 @@ extends CharacterBody3D
 @onready var claw_cooldown_timer = $Timers/ClawCooldownTimer
 @onready var block_timer = $Timers/BlockTimer
 @onready var block_cooldown_timer = $Timers/BlockCooldownTimer
+@onready var hit_timer = $Timers/HitTimer
 
 @onready var claws = $Visual/YBot/Armature/Skeleton3D/Claws
 @onready var block_mesh = $Visual/YBot/Block/BlockMesh
+@onready var attack_box = $Visual/YBot/AttackArea/AttackBox
+@onready var block_box = $Visual/YBot/Block/BlockArea/BlockBox
 
 
 const SPEED = 2.7
@@ -21,7 +24,7 @@ const JUMP_VELOCITY = 5.0
 var sens_horizontal = 0.5
 var sens_vertical = 0.5
 
-enum STATE {IDLE, MOVING, JUMPING, ATTACK, BLOCKING, CASTING, ULTIMATE}
+enum STATE {IDLE, MOVING, JUMPING, ATTACK, BLOCKING, CASTING, ULTIMATE, HIT}
 enum COMBO {NONE, FIRST, SECOND}
 
 @export var action: STATE = STATE.IDLE
@@ -34,6 +37,8 @@ var claw_cooldown: float = 5
 var block_time: float = 5
 var block_cooldown: float = 4
 
+var hit_direction: Vector2
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -45,6 +50,7 @@ func _ready():
 	animation_player.speed_scale = 1.1
 	claws.visible = false
 	block_mesh.visible = false
+	block_box.disabled = true
 
 
 func _input(event):
@@ -114,6 +120,7 @@ func cast_ability_2():
 	if can_cast_abilities():
 		action = STATE.BLOCKING
 		block_mesh.visible = true
+		block_box.disabled = false
 		block_timer.start(block_time)
 		animation_player.play("block")
 		HUD.cast_ability_effect.emit(2, block_time)
@@ -128,6 +135,13 @@ func cast_ability_3():
 func cast_ability_4():
 	if can_cast_abilities():
 		pass
+
+
+func get_hit(new_direction: Vector2):
+	action = STATE.HIT
+	hit_direction = new_direction
+	hit_timer.start(0.2)
+	
 
 
 func _physics_process(delta):
@@ -172,6 +186,11 @@ func _physics_process(delta):
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
 		move_and_slide()
+	
+	if action == STATE.HIT:
+		velocity.x = hit_direction.x * 10
+		velocity.z = hit_direction.y * 10
+		move_and_slide()
 
 
 func _on_punch_timer_timeout():
@@ -195,9 +214,14 @@ func _on_claw_timer_timeout():
 func _on_block_timer_timeout():
 	action = STATE.IDLE
 	block_mesh.visible = false
+	block_box.disabled = true
 	block_cooldown_timer.start(block_cooldown)
 	HUD.set_ability_cooldown.emit(2, block_cooldown)
 
 
 func _on_block_cooldown_timer_timeout():
 	pass # Replace with function body.
+
+
+func _on_hit_timer_timeout():
+	action = STATE.IDLE
