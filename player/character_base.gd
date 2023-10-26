@@ -117,7 +117,7 @@ func cast_ability_1():
 			HUD.cast_ability_effect.emit(1, claw_time)
 
 func cast_ability_2():
-	if can_cast_abilities():
+	if action != STATE.BLOCKING and can_cast_abilities():
 		action = STATE.BLOCKING
 		block_mesh.visible = true
 		block_box.disabled = false
@@ -217,11 +217,6 @@ func _on_block_timer_timeout():
 	block_box.disabled = true
 	block_cooldown_timer.start(block_cooldown)
 	HUD.set_ability_cooldown.emit(2, block_cooldown)
-
-
-func _on_block_cooldown_timer_timeout():
-	pass # Replace with function body.
-
 
 func _on_hit_timer_timeout():
 	action = STATE.IDLE
