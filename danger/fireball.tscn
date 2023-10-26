@@ -19,7 +19,7 @@ rings = 8
 
 [node name="Timer" type="Timer" parent="."]
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." groups=["danger"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 shape = SubResource("SphereShape3D_vogxd")

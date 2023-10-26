@@ -18,7 +18,7 @@ extends CharacterBody3D
 @onready var block_box = $Visual/YBot/Block/BlockArea/BlockBox
 
 
-const SPEED = 2.7
+const SPEED = 2.7 * 2
 const JUMP_VELOCITY = 5.0
 
 var sens_horizontal = 0.5
@@ -29,7 +29,7 @@ enum COMBO {NONE, FIRST, SECOND}
 
 @export var action: STATE = STATE.IDLE
 var combo_state: COMBO = COMBO.NONE
-var combo_timeout: float = 0.5
+var combo_timeout: float = 0.2
 
 var claw_time: float = 7
 var claw_cooldown: float = 5
@@ -38,6 +38,10 @@ var block_time: float = 5
 var block_cooldown: float = 4
 
 var hit_direction: Vector2
+
+var base_damage: float = 25
+var claw_damage: float = 50
+var current_damage: float = base_damage
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -49,6 +53,7 @@ func _ready():
 	animation_player.play("idle")
 	animation_player.speed_scale = 1.1
 	claws.visible = false
+	attack_box.disabled = true
 	block_mesh.visible = false
 	block_box.disabled = true
 
@@ -83,6 +88,7 @@ func throw_punch():
 	if can_cast_abilities() and is_on_floor():
 		action = STATE.ATTACK
 		throw_punch_from_combo()
+		attack_box.disabled = false
 		combo_timer.stop()
 		punch_timer.start(0.9)
 
@@ -114,17 +120,18 @@ func cast_ability_1():
 		if claw_timer.is_stopped() and claw_cooldown_timer.is_stopped():
 			claws.visible = true
 			claw_timer.start(claw_time)
+			current_damage = claw_damage
 			HUD.cast_ability_effect.emit(1, claw_time)
 
 func cast_ability_2():
-	if action != STATE.BLOCKING and can_cast_abilities():
+	if block_cooldown_timer.is_stopped() and can_cast_abilities():
 		action = STATE.BLOCKING
 		block_mesh.visible = true
 		block_box.disabled = false
 		block_timer.start(block_time)
 		animation_player.play("block")
 		HUD.cast_ability_effect.emit(2, block_time)
-	elif action == STATE.BLOCKING:
+	elif action == STATE.BLOCKING and not block_timer.is_stopped():
 		block_timer.stop()
 		_on_block_timer_timeout()
 
@@ -141,7 +148,6 @@ func get_hit(new_direction: Vector2):
 	action = STATE.HIT
 	hit_direction = new_direction
 	hit_timer.start(0.2)
-	
 
 
 func _physics_process(delta):
@@ -165,7 +171,7 @@ func _physics_process(delta):
 		if direction:
 			action = STATE.MOVING
 			if is_on_floor():
-				animation_player.play("walk_forward")
+				animation_player.play("run_forward")
 			
 			visual.look_at(position + direction)
 			
@@ -194,6 +200,7 @@ func _physics_process(delta):
 
 
 func _on_punch_timer_timeout():
+	attack_box.disabled = true
 	action = STATE.IDLE
 	combo_timer.start(combo_timeout)
 
@@ -208,6 +215,7 @@ func _on_animation_player_animation_finished(anim_name):
 func _on_claw_timer_timeout():
 	claws.visible = false
 	claw_cooldown_timer.start(claw_cooldown)
+	current_damage = base_damage
 	HUD.set_ability_cooldown.emit(1, claw_cooldown)
 
 
@@ -220,3 +228,14 @@ func _on_block_timer_timeout():
 
 func _on_hit_timer_timeout():
 	action = STATE.IDLE
+	hit_direction = Vector2.ZERO
+
+
+func _on_block_area_area_entered(area):
+	if area.is_in_group("danger"):
+		print("blocked!")
+
+
+func _on_attack_area_area_entered(area):
+	if area.is_in_group("enemy"):
+		area.get_parent().take_damage(current_damage)

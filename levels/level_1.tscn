@@ -94,7 +94,7 @@ use_collision = true
 [node name="Danger" type="Node3D" parent="."]
 
 [node name="enemy" parent="Danger" instance=ExtResource("3_a7kt4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.1071, 0.5, 5.1366)
+transform = Transform3D(-0.573691, 0, 0.819072, 0, 1, 0, -0.819072, 0, -0.573691, -12.1071, 0.5, 5.1366)
 
 [node name="Cannon" parent="Danger" instance=ExtResource("7_bmsum")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0.5, -6)
