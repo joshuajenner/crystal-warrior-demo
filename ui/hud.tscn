@@ -64,10 +64,41 @@ theme_override_constants/margin_top = 128
 theme_override_constants/margin_right = 128
 theme_override_constants/margin_bottom = 128
 
-[node name="AbilityBar" type="TextureProgressBar" parent="CenterMargin"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterMargin"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
+
+[node name="Clawz" type="HBoxContainer" parent="CenterMargin/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Label" type="Label" parent="CenterMargin/VBoxContainer/Clawz"]
+layout_mode = 2
+text = "Claws"
+
+[node name="ClawsBar" type="TextureProgressBar" parent="CenterMargin/VBoxContainer/Clawz"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+value = 100.0
+texture_under = ExtResource("2_nf1p6")
+texture_progress = ExtResource("3_by5ny")
+
+[node name="Block" type="HBoxContainer" parent="CenterMargin/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Label" type="Label" parent="CenterMargin/VBoxContainer/Block"]
+layout_mode = 2
+text = "Block"
+
+[node name="BlockBar" type="TextureProgressBar" parent="CenterMargin/VBoxContainer/Block"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 value = 100.0
 texture_under = ExtResource("2_nf1p6")
 texture_progress = ExtResource("3_by5ny")

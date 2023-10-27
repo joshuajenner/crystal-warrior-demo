@@ -11,8 +11,9 @@
 [ext_resource type="PackedScene" uid="uid://bwkysw57o6rke" path="res://danger/cannon.tscn" id="7_bmsum"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cu2p1"]
-sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
-ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
+sky_horizon_color = Color(0.72549, 0.733333, 0.745098, 1)
+ground_horizon_color = Color(0.384314, 0.454902, 0.54902, 1)
 
 [sub_resource type="Sky" id="Sky_ep036"]
 sky_material = SubResource("ProceduralSkyMaterial_cu2p1")
@@ -24,7 +25,7 @@ tonemap_mode = 2
 sdfgi_enabled = true
 glow_enabled = true
 fog_enabled = true
-fog_light_color = Color(1, 1, 1, 1)
+fog_light_color = Color(0.9, 0.9, 0.9, 1)
 fog_density = 0.001
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p7fre"]
@@ -95,6 +96,18 @@ use_collision = true
 
 [node name="enemy" parent="Danger" instance=ExtResource("3_a7kt4")]
 transform = Transform3D(-0.573691, 0, 0.819072, 0, 1, 0, -0.819072, 0, -0.573691, -12.1071, 0.5, 5.1366)
+
+[node name="enemy5" parent="Danger" instance=ExtResource("3_a7kt4")]
+transform = Transform3D(-0.906367, 0, 0.422492, 0, 1, 0, -0.422492, 0, -0.906367, -12.1071, 0.5, 9.1366)
+
+[node name="enemy4" parent="Danger" instance=ExtResource("3_a7kt4")]
+transform = Transform3D(-0.573691, 0, 0.819072, 0, 1, 0, -0.819072, 0, -0.573691, -16.1071, 0.5, 4.1366)
+
+[node name="enemy3" parent="Danger" instance=ExtResource("3_a7kt4")]
+transform = Transform3D(-0.939645, 0, -0.342151, 0, 1, 0, 0.342151, 0, -0.939645, -8.1071, 0.5, 6.1366)
+
+[node name="enemy2" parent="Danger" instance=ExtResource("3_a7kt4")]
+transform = Transform3D(0.173511, 0, 0.984832, 0, 1, 0, -0.984832, 0, 0.173511, -13.1071, 0.5, 0.1366)
 
 [node name="Cannon" parent="Danger" instance=ExtResource("7_bmsum")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0.5, -6)

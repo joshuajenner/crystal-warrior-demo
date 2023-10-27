@@ -16,7 +16,9 @@ extends CharacterBody3D
 @onready var block_mesh = $Visual/YBot/Block/BlockMesh
 @onready var attack_box = $Visual/YBot/AttackArea/AttackBox
 @onready var block_box = $Visual/YBot/Block/BlockArea/BlockBox
+@onready var shard_spawn = $ShardSpawn
 
+var shard_drop = preload("res://entities/crystal_drop.tscn")
 
 const SPEED = 2.7 * 2
 const JUMP_VELOCITY = 5.0
@@ -31,8 +33,8 @@ enum COMBO {NONE, FIRST, SECOND}
 var combo_state: COMBO = COMBO.NONE
 var combo_timeout: float = 0.2
 
-var claw_time: float = 7
-var claw_cooldown: float = 5
+var claw_time: float = 9
+var claw_cooldown: float = 4
 
 var block_time: float = 5
 var block_cooldown: float = 4
@@ -42,6 +44,11 @@ var hit_direction: Vector2
 var base_damage: float = 25
 var claw_damage: float = 50
 var current_damage: float = base_damage
+
+var claw_shard_spawned: bool = false
+var claw_mana = 100
+var block_shard_spawned: bool = false
+var block_mana = 100
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -121,16 +128,22 @@ func cast_ability_1():
 			claws.visible = true
 			claw_timer.start(claw_time)
 			current_damage = claw_damage
+			claw_shard_spawned = false
+			claw_mana = 100
 			HUD.cast_ability_effect.emit(1, claw_time)
+			HUD.activate_claws.emit()
 
 func cast_ability_2():
 	if block_cooldown_timer.is_stopped() and can_cast_abilities():
 		action = STATE.BLOCKING
 		block_mesh.visible = true
 		block_box.disabled = false
+		block_shard_spawned = false
+		block_mana = 100
 		block_timer.start(block_time)
 		animation_player.play("block")
 		HUD.cast_ability_effect.emit(2, block_time)
+		HUD.activate_block.emit()
 	elif action == STATE.BLOCKING and not block_timer.is_stopped():
 		block_timer.stop()
 		_on_block_timer_timeout()
@@ -233,9 +246,32 @@ func _on_hit_timer_timeout():
 
 func _on_block_area_area_entered(area):
 	if area.is_in_group("danger"):
-		print("blocked!")
+		block_mana -= 34
+		HUD.deplete_block.emit(34)
+		if block_mana <= 0 and not block_shard_spawned:
+			block_shard_spawned = true
+			spawn_shard()
 
 
 func _on_attack_area_area_entered(area):
 	if area.is_in_group("enemy"):
 		area.get_parent().take_damage(current_damage)
+		HUD.deplete_claws.emit(20)
+		claw_mana -= 20
+		if claw_mana <= 0 and not claw_shard_spawned:
+			claw_shard_spawned = true
+			spawn_shard()
+
+
+func spawn_shard():
+	var new_shard = shard_drop.instantiate()
+	new_shard.global_position = shard_spawn.global_position
+	get_parent().add_child(new_shard)
+
+
+func _on_block_cooldown_timer_timeout():
+	HUD.deactivate_block.emit()
+
+
+func _on_claw_cooldown_timer_timeout():
+	HUD.deactivate_claws.emit()
