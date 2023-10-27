@@ -11,14 +11,24 @@ extends CharacterBody3D
 @onready var block_timer = $Timers/BlockTimer
 @onready var block_cooldown_timer = $Timers/BlockCooldownTimer
 @onready var hit_timer = $Timers/HitTimer
+@onready var pillar_cooldown_timer = $Timers/PillarCooldownTimer
+@onready var ult_timer = $Timers/UltTimer
+@onready var ult_cooldown_timer = $Timers/UltCooldownTimer
+@onready var ult_shot_timer = $Timers/UltShotTimer
 
 @onready var claws = $Visual/YBot/Armature/Skeleton3D/Claws
 @onready var block_mesh = $Visual/YBot/Block/BlockMesh
 @onready var attack_box = $Visual/YBot/AttackArea/AttackBox
 @onready var block_box = $Visual/YBot/Block/BlockArea/BlockBox
 @onready var shard_spawn = $ShardSpawn
+@onready var pillar_spawn = $Visual/PillarSpawn
+@onready var enemy_detection = $EnemyDetection
+@onready var shard_detection = $ShardDetection
+@onready var ult_shot_spawn = $Visual/UltShotSpawn
 
+var pillar = preload("res://entities/crystal_pillar.tscn")
 var shard_drop = preload("res://entities/crystal_drop.tscn")
+var shard_shot = preload("res://entities/crystal_shot.tscn")
 
 const SPEED = 2.7 * 2
 const JUMP_VELOCITY = 5.0
@@ -49,6 +59,15 @@ var claw_shard_spawned: bool = false
 var claw_mana = 100
 var block_shard_spawned: bool = false
 var block_mana = 100
+
+var pillar_cooldown = 6
+
+var base_shard_amount: int = 10
+var drop_shard_amount: int = 4
+var ultimate_time: float = 15
+var ultimate_cooldown_time: float = 10
+var ultimate_shard_amount: int = 0
+var ult_fire_rate: float = 0.2
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -84,10 +103,10 @@ func _input(event):
 	if event.is_action_pressed("ability_2"):
 		cast_ability_2()
 	# Pillar
-	if event.is_action("ability_3"):
+	if event.is_action_pressed("ability_3"):
 		cast_ability_3()
 	# A Thousand Shards
-	if event.is_action("ability_4"):
+	if event.is_action_pressed("ability_4"):
 		cast_ability_4()
 
 
@@ -150,12 +169,55 @@ func cast_ability_2():
 
 func cast_ability_3():
 	if can_cast_abilities():
-		pass
+		if pillar_cooldown_timer.is_stopped():
+			action = STATE.CASTING
+			pillar_cooldown_timer.start(pillar_cooldown)
+			HUD.set_ability_cooldown.emit(3, pillar_cooldown)
+			animation_player.play("uppercut")
+			
+			var new_pillar = pillar.instantiate()
+			new_pillar.global_position = get_pillar_spawn_position()
+			get_parent().add_child(new_pillar)
 
 func cast_ability_4():
 	if can_cast_abilities():
-		pass
+		if ult_cooldown_timer.is_stopped():
+			var nearby_areas = shard_detection.get_overlapping_areas()
+			var shard_amount = base_shard_amount
+			for area in nearby_areas:
+				if area.is_in_group("drop"):
+					shard_amount += drop_shard_amount
+					area.get_parent().pickup()
+			action = STATE.ULTIMATE
+			ultimate_shard_amount = shard_amount
+			_on_claw_timer_timeout()
+			ult_timer.start(ultimate_time)
+			HUD.activate_ult.emit(shard_amount)
+			HUD.cast_ability_effect.emit(4, ultimate_time)
 
+
+func throw_shard():
+	if ult_shot_timer.is_stopped():
+		var new_shot = shard_shot.instantiate()
+		new_shot.global_position = ult_shot_spawn.global_position
+		var new_dir = (ult_shot_spawn.global_position - global_position).normalized()
+		new_shot.direction = new_dir
+		get_parent().add_child(new_shot)
+#		new_shot.rotate_mesh(new_dir)
+		ultimate_shard_amount -= 1
+		HUD.deplete_shard.emit()
+		ult_shot_timer.start(ult_fire_rate)
+
+func get_pillar_spawn_position() -> Vector3:
+	var all_areas: Array[Area3D] = enemy_detection.get_overlapping_areas()
+	for area in all_areas:
+		if area.is_in_group("enemy"):
+			var area_direction = (area.global_position - global_position).normalized()
+			var char_dir = (pillar_spawn.global_position - global_position).normalized()
+			if char_dir.dot(area_direction) >= 0.9:
+				return area.global_position
+		
+	return pillar_spawn.global_position
 
 func get_hit(new_direction: Vector2):
 	action = STATE.HIT
@@ -178,7 +240,10 @@ func _physics_process(delta):
 		velocity.y = JUMP_VELOCITY
 	
 	if Input.is_action_pressed("attack"):
-		throw_punch()
+		if action == STATE.ULTIMATE:
+			throw_shard()
+		else:
+			throw_punch()
 	
 	if action == STATE.MOVING or action == STATE.IDLE:
 		if direction:
@@ -210,6 +275,13 @@ func _physics_process(delta):
 		velocity.x = hit_direction.x * 10
 		velocity.z = hit_direction.y * 10
 		move_and_slide()
+	
+	if action == STATE.ULTIMATE:
+		animation_player.play("fall")
+		visual.look_at(position + direction)
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+		move_and_slide()
 
 
 func _on_punch_timer_timeout():
@@ -230,6 +302,7 @@ func _on_claw_timer_timeout():
 	claw_cooldown_timer.start(claw_cooldown)
 	current_damage = base_damage
 	HUD.set_ability_cooldown.emit(1, claw_cooldown)
+	HUD.deactivate_claws.emit()
 
 
 func _on_block_timer_timeout():
@@ -238,6 +311,7 @@ func _on_block_timer_timeout():
 	block_box.disabled = true
 	block_cooldown_timer.start(block_cooldown)
 	HUD.set_ability_cooldown.emit(2, block_cooldown)
+	HUD.deactivate_block.emit()
 
 func _on_hit_timer_timeout():
 	action = STATE.IDLE
@@ -256,11 +330,14 @@ func _on_block_area_area_entered(area):
 func _on_attack_area_area_entered(area):
 	if area.is_in_group("enemy"):
 		area.get_parent().take_damage(current_damage)
-		HUD.deplete_claws.emit(20)
-		claw_mana -= 20
-		if claw_mana <= 0 and not claw_shard_spawned:
-			claw_shard_spawned = true
-			spawn_shard()
+		if not claw_timer.is_stopped():
+			HUD.deplete_claws.emit(20)
+			claw_mana -= 20
+			if claw_mana <= 0 and not claw_shard_spawned:
+				claw_shard_spawned = true
+				spawn_shard()
+	if area.is_in_group("breakable"):
+		area.get_parent().take_damage(current_damage)
 
 
 func spawn_shard():
@@ -269,9 +346,6 @@ func spawn_shard():
 	get_parent().add_child(new_shard)
 
 
-func _on_block_cooldown_timer_timeout():
-	HUD.deactivate_block.emit()
-
-
-func _on_claw_cooldown_timer_timeout():
-	HUD.deactivate_claws.emit()
+func _on_ult_timer_timeout():
+	HUD.deactivate_ult.emit()
+	HUD.set_ability_cooldown.emit(4, ultimate_cooldown_time)

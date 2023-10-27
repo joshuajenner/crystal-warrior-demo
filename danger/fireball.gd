@@ -23,7 +23,6 @@ func _on_area_3d_area_entered(area):
 
 func _on_area_3d_body_entered(body):
 	if body.is_in_group("player"):
-		print("bod")
 		var hit_x = body.global_position.x - global_position.x
 		var hit_y = body.global_position.z - global_position.z
 		var hit_direction = Vector2(hit_x, hit_y)

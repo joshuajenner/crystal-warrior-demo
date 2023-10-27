@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://tlt3vgg83ot1"]
+
+[ext_resource type="Script" path="res://entities/crystal_shot.gd" id="1_ym10l"]
+[ext_resource type="Material" uid="uid://fja5trodvii5" path="res://assets/materials/crystal_mat.tres" id="2_wq1gx"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_tbssj"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_o2b7r"]
+
+[node name="CrystalShot" type="CharacterBody3D"]
+motion_mode = 1
+script = ExtResource("1_ym10l")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_tbssj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_o2b7r")
+disabled = true
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="."]
+radial_segments = 4
+rings = 2
+smooth_faces = false
+material = ExtResource("2_wq1gx")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 7.0
+one_shot = true
+autostart = true
+
+[connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

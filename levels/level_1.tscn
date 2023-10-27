@@ -96,18 +96,23 @@ use_collision = true
 
 [node name="enemy" parent="Danger" instance=ExtResource("3_a7kt4")]
 transform = Transform3D(-0.573691, 0, 0.819072, 0, 1, 0, -0.819072, 0, -0.573691, -12.1071, 0.5, 5.1366)
+max_health = 100.0
 
 [node name="enemy5" parent="Danger" instance=ExtResource("3_a7kt4")]
 transform = Transform3D(-0.906367, 0, 0.422492, 0, 1, 0, -0.422492, 0, -0.906367, -12.1071, 0.5, 9.1366)
+max_health = 100.0
 
 [node name="enemy4" parent="Danger" instance=ExtResource("3_a7kt4")]
 transform = Transform3D(-0.573691, 0, 0.819072, 0, 1, 0, -0.819072, 0, -0.573691, -16.1071, 0.5, 4.1366)
+max_health = 100.0
 
 [node name="enemy3" parent="Danger" instance=ExtResource("3_a7kt4")]
 transform = Transform3D(-0.939645, 0, -0.342151, 0, 1, 0, 0.342151, 0, -0.939645, -8.1071, 0.5, 6.1366)
+max_health = 100.0
 
 [node name="enemy2" parent="Danger" instance=ExtResource("3_a7kt4")]
 transform = Transform3D(0.173511, 0, 0.984832, 0, 1, 0, -0.984832, 0, 0.173511, -13.1071, 0.5, 0.1366)
+max_health = 200.0
 
 [node name="Cannon" parent="Danger" instance=ExtResource("7_bmsum")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0.5, -6)

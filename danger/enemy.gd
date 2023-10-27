@@ -6,11 +6,13 @@ extends Node3D
 @onready var collision_shape_3d = $Area/CollisionShape3D
 @onready var area = $Area
 
+@export var max_health: float
 var health: float = 100
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	health = 100
+	health = max_health
 	label_3d.text = str(health)
 	csg_mesh_3d.use_collision = true
 	collision_shape_3d.disabled = false
