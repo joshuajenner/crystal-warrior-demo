@@ -205,6 +205,9 @@ func throw_shard():
 		get_parent().add_child(new_shot)
 #		new_shot.rotate_mesh(new_dir)
 		ultimate_shard_amount -= 1
+		if ultimate_shard_amount <= 0:
+			_on_ult_timer_timeout()
+			return
 		HUD.deplete_shard.emit()
 		ult_shot_timer.start(ult_fire_rate)
 
@@ -347,5 +350,6 @@ func spawn_shard():
 
 
 func _on_ult_timer_timeout():
+	action = STATE.IDLE
 	HUD.deactivate_ult.emit()
 	HUD.set_ability_cooldown.emit(4, ultimate_cooldown_time)
