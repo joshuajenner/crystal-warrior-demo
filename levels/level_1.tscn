@@ -1,13 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://biu4gxwp1r72i"]
+[gd_scene load_steps=12 format=3 uid="uid://biu4gxwp1r72i"]
 
 [ext_resource type="Texture2D" uid="uid://c8arnlq67qi7" path="res://assets/textures/grids/Dark/texture_05.png" id="1_mdac7"]
 [ext_resource type="Texture2D" uid="uid://b58xv1joypxo5" path="res://assets/textures/grids/Orange/texture_09.png" id="2_ac5s1"]
 [ext_resource type="PackedScene" uid="uid://clrre8hsahp0" path="res://danger/enemy.tscn" id="3_a7kt4"]
-[ext_resource type="Texture2D" uid="uid://bjf0s45oyh1qn" path="res://assets/textures/triangle.png" id="3_gtvy3"]
 [ext_resource type="PackedScene" uid="uid://1iw22515hwg2" path="res://player/character_base.tscn" id="3_pbhx8"]
-[ext_resource type="Texture2D" uid="uid://d2hyqedpwk2ik" path="res://assets/textures/circle.png" id="4_0kjrp"]
 [ext_resource type="PackedScene" uid="uid://dt757nbq1dtnh" path="res://ui/hud.tscn" id="4_xtydk"]
-[ext_resource type="Texture2D" uid="uid://48gqfc767ri6" path="res://assets/textures/cross.png" id="5_iq3t4"]
 [ext_resource type="PackedScene" uid="uid://bwkysw57o6rke" path="res://danger/cannon.tscn" id="7_bmsum"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cu2p1"]
@@ -36,15 +33,6 @@ uv1_triplanar = true
 albedo_texture = ExtResource("2_ac5s1")
 uv1_triplanar = true
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mh75j"]
-albedo_texture = ExtResource("3_gtvy3")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c3dtc"]
-albedo_texture = ExtResource("4_0kjrp")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tsv5m"]
-albedo_texture = ExtResource("5_iq3t4")
-
 [node name="Main" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -62,35 +50,20 @@ use_collision = true
 size = Vector3(100, 1, 100)
 
 [node name="Cube" type="CSGBox3D" parent="Map"]
-transform = Transform3D(0.953853, 0, -0.300273, 0, 1, 0, 0.300273, 0, 0.953853, 11.2347, 1, 4.5423)
+transform = Transform3D(0.987518, 0, 0.157503, 0, 1, 0, -0.157503, 0, 0.987518, 3.28684, 1, 2.27908)
 material_override = SubResource("StandardMaterial3D_ysiop")
 use_collision = true
 
 [node name="Cube2" type="CSGBox3D" parent="Map"]
-transform = Transform3D(0.994175, 0, 0.107774, 0, 1, 0, -0.107774, 0, 0.994175, 7.3148, 1, 4.74595)
+transform = Transform3D(0.841293, 0, 0.540578, 0, 1, 0, -0.540578, 0, 0.841293, -0.12913, 1, 4.21254)
 material_override = SubResource("StandardMaterial3D_ysiop")
 use_collision = true
 
 [node name="Cube3" type="CSGBox3D" parent="Map"]
-transform = Transform3D(0.953465, 0, 0.301505, 0, 1, 0, -0.301505, 0, 0.953465, 8.80604, 1.5, 7.37888)
+transform = Transform3D(0.718321, 0, 0.695713, 0, 1, 0, -0.695713, 0, 0.718321, 2.3813, 1.5, 5.90187)
 material_override = SubResource("StandardMaterial3D_ysiop")
 use_collision = true
 size = Vector3(2, 2, 2)
-
-[node name="Cube4" type="CSGBox3D" parent="Map"]
-transform = Transform3D(-0.933743, 0, -0.357944, 0, 1, 0, 0.357944, 0, -0.933743, 1.02987, 2, 3.35814)
-material_override = SubResource("StandardMaterial3D_mh75j")
-use_collision = true
-
-[node name="Cube5" type="CSGBox3D" parent="Map"]
-transform = Transform3D(-0.958978, 0, -0.28348, 0, 1, 0, 0.28348, 0, -0.958978, 0.0274563, 1, 3.30261)
-material_override = SubResource("StandardMaterial3D_c3dtc")
-use_collision = true
-
-[node name="Cube6" type="CSGBox3D" parent="Map"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1948, 1, 3.15381)
-material_override = SubResource("StandardMaterial3D_tsv5m")
-use_collision = true
 
 [node name="Danger" type="Node3D" parent="."]
 
@@ -118,7 +91,7 @@ max_health = 200.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0.5, -6)
 
 [node name="CharacterBody3D" parent="." instance=ExtResource("3_pbhx8")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.21771, 0.5, -2.3325)
+transform = Transform3D(-0.711045, 0, 0.703146, 0, 1, 0, -0.703146, 0, -0.711045, -1.00677, 0.5, -4.27281)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

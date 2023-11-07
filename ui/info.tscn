@@ -1,0 +1,57 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4t8r0gnpi47a"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_olsy1"]
+
+[sub_resource type="FontVariation" id="FontVariation_aumhl"]
+variation_embolden = 1.0
+
+[node name="Info" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Press F1 to toggle info"
+
+[node name="Margin" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/Margin"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="VBoxContainer/Margin"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Margin/Margin"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/Margin/Margin/VBoxContainer"]
+layout_mode = 2
+text = "Design"
+fit_content = true
+custom_effects = [SubResource("RichTextEffect_olsy1")]
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="VBoxContainer/Margin/Margin/VBoxContainer"]
+layout_mode = 2
+text = "Design"
+fit_content = true
+
+[node name="Label" type="Label" parent="VBoxContainer/Margin/Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_aumhl")
+text = "Design"
