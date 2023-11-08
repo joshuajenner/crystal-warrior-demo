@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://c4t8r0gnpi47a"]
+[gd_scene load_steps=4 format=3 uid="uid://c4t8r0gnpi47a"]
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_olsy1"]
+[ext_resource type="Script" path="res://ui/info.gd" id="1_8kcg8"]
+[ext_resource type="Theme" uid="uid://bvujjv1k88t7u" path="res://default_theme.tres" id="1_vfdx5"]
 
 [sub_resource type="FontVariation" id="FontVariation_aumhl"]
 variation_embolden = 1.0
@@ -11,47 +12,107 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 32
-theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 32
+theme = ExtResource("1_vfdx5")
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+script = ExtResource("1_8kcg8")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="Top" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Panel" type="Panel" parent="VBoxContainer/Top"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="VBoxContainer/Top"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="Label" type="Label" parent="VBoxContainer/Top/Margin"]
 layout_mode = 2
 text = "Press F1 to toggle info"
 
-[node name="Margin" type="MarginContainer" parent="VBoxContainer"]
+[node name="Main" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 
-[node name="Panel" type="Panel" parent="VBoxContainer/Margin"]
+[node name="Panel" type="Panel" parent="VBoxContainer/Main"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="VBoxContainer/Margin"]
+[node name="Margin" type="MarginContainer" parent="VBoxContainer/Main"]
 layout_mode = 2
 theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
+theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_bottom = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Margin/Margin"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Main/Margin"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/Margin/Margin/VBoxContainer"]
-layout_mode = 2
-text = "Design"
-fit_content = true
-custom_effects = [SubResource("RichTextEffect_olsy1")]
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="VBoxContainer/Margin/Margin/VBoxContainer"]
-layout_mode = 2
-text = "Design"
-fit_content = true
-
-[node name="Label" type="Label" parent="VBoxContainer/Margin/Margin/VBoxContainer"]
+[node name="Design" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_aumhl")
 text = "Design"
+
+[node name="Design Desc" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
+layout_mode = 2
+text = "While using the basic abilities, the character is a short range melee fighter. If the player can use their abilities with maximum value, they are able to empower their ultimate ability. The ultimate transforms the character into a precise long range damage dealer which is a reward for using their basic abilities well."
+autowrap_mode = 2
+
+[node name="Basic" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_aumhl")
+text = "Basic"
+
+[node name="Basic Desc" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
+layout_mode = 2
+text = "WASD - Move / Spacebar - Jump / Left Mouse Button - Melee Attack"
+
+[node name="E" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_aumhl")
+text = "E - Crystal Claws"
+
+[node name="E Desc" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
+layout_mode = 2
+text = "Encase your hands in crystals. Your melee attacks do increased damage for a few seconds. Attack enough times before the effect finishes to shatter the claws, spawning a Crystal Shard."
+autowrap_mode = 2
+
+[node name="R" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_aumhl")
+text = "R - Reflect"
+
+[node name="R Desc" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
+layout_mode = 2
+text = "Create a crystal shield to block projectiles for a few seconds. Block enough damage before the effect finishes to shatter the shield, spawning a Crystal Shard."
+autowrap_mode = 2
+
+[node name="F" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_aumhl")
+text = "F - Pillar"
+
+[node name="F Desc" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
+layout_mode = 2
+text = "Summon a crystal pillar in front of you. This can be used to provide cover. If an enemy is within range, the pillar will be summoned on them. Attack the pillar enough times to shatter it, dealing bonus damage to the enemy, and spawning a Crystal Shard."
+autowrap_mode = 2
+
+[node name="Q" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_aumhl")
+text = "Q - Shard Storm (Ultimate)"
+
+[node name="Q Desc" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
+layout_mode = 2
+text = "Transform into a shard shooter for a few seconds. Use Left Mouse Button to fire Crystal Shards. This abilitiy starts with a base amount of shards, nearby Crystal Shards are consumed and converted into additional ammo."
+autowrap_mode = 2

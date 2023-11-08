@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://biu4gxwp1r72i"]
+[gd_scene load_steps=13 format=3 uid="uid://biu4gxwp1r72i"]
 
 [ext_resource type="Texture2D" uid="uid://c8arnlq67qi7" path="res://assets/textures/grids/Dark/texture_05.png" id="1_mdac7"]
 [ext_resource type="Texture2D" uid="uid://b58xv1joypxo5" path="res://assets/textures/grids/Orange/texture_09.png" id="2_ac5s1"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://1iw22515hwg2" path="res://player/character_base.tscn" id="3_pbhx8"]
 [ext_resource type="PackedScene" uid="uid://dt757nbq1dtnh" path="res://ui/hud.tscn" id="4_xtydk"]
 [ext_resource type="PackedScene" uid="uid://bwkysw57o6rke" path="res://danger/cannon.tscn" id="7_bmsum"]
+[ext_resource type="PackedScene" uid="uid://c4t8r0gnpi47a" path="res://ui/info.tscn" id="7_g845s"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cu2p1"]
 sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
@@ -96,3 +97,5 @@ transform = Transform3D(-0.711045, 0, 0.703146, 0, 1, 0, -0.703146, 0, -0.711045
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="HUD" parent="CanvasLayer" instance=ExtResource("4_xtydk")]
+
+[node name="Info" parent="CanvasLayer" instance=ExtResource("7_g845s")]
