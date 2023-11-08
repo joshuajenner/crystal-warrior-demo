@@ -104,7 +104,7 @@ text = "F - Pillar"
 
 [node name="F Desc" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
 layout_mode = 2
-text = "Summon a crystal pillar in front of you. This can be used to provide cover. If an enemy is within range, the pillar will be summoned on them. Attack the pillar enough times to shatter it, dealing bonus damage to the enemy, and spawning a Crystal Shard."
+text = "Summon a crystal pillar in front of you. This lasts for a few seconds and can be used to provide cover. If an enemy is within range, the pillar will be summoned on them. Attack the pillar enough times to shatter it, dealing bonus damage to the enemy, and spawning a Crystal Shard."
 autowrap_mode = 2
 
 [node name="Q" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]

@@ -31,7 +31,7 @@ var shard_drop = preload("res://entities/crystal_drop.tscn")
 var shard_shot = preload("res://entities/crystal_shot.tscn")
 
 const SPEED = 2.7 * 2
-const JUMP_VELOCITY = 5.0
+const JUMP_VELOCITY = 5.5
 
 var sens_horizontal = 0.5
 var sens_vertical = 0.5

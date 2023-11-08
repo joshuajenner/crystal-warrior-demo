@@ -17,7 +17,7 @@ func _on_timer_timeout():
 
 
 func _on_area_3d_area_entered(area):
-	if area.is_in_group("block"):
+	if area.is_in_group("block") or area.is_in_group("breakable"):
 		self.queue_free()
 
 
@@ -28,3 +28,4 @@ func _on_area_3d_body_entered(body):
 		var hit_direction = Vector2(hit_x, hit_y)
 		body.get_hit(hit_direction)
 		self.queue_free()
+
