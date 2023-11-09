@@ -75,7 +75,8 @@ text = "Basic"
 
 [node name="Basic Desc" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
 layout_mode = 2
-text = "WASD - Move / Spacebar - Jump / Left Mouse Button - Melee Attack"
+text = "Esc - Free Mouse
+WASD - Move / Spacebar - Jump / Left Mouse Button - Melee Attack"
 
 [node name="E" type="Label" parent="VBoxContainer/Main/Margin/VBoxContainer"]
 layout_mode = 2
